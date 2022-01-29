@@ -72,6 +72,3 @@ class MainActivity : AppCompatActivity() {
 //        }
     }
 }
-
-fun Context.showShortToast(text: String) =
-    Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
