@@ -1,3 +1,5 @@
+package yegor.cheprasov.droidmailx
+
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -12,8 +14,6 @@ import jakarta.mail.internet.MimeMessage
 import jakarta.mail.internet.MimeMultipart
 import org.jsoup.Jsoup
 import org.jsoup.safety.Whitelist
-import yegor.cheprasov.droidmailx.AppExecutors
-import yegor.cheprasov.droidmailx.DroidmailXType
 import java.io.IOException
 
 class DroidMailX(
@@ -143,12 +143,7 @@ class DroidMailX(
 
         fun attachments(attachments: List<String>) = apply { this.attachments = attachments }
 
-        fun type(type: DroidmailXType) = apply { this.type = type.toString() }
-
-        /**
-         * onCompleteCallback
-         * Version v0.0.3 ,errorMessage is provided for user in form of String
-         */
+        fun type(type: DroidMailXType) = apply { this.type = type.toString() }
 
         fun onCompleteCallback(successCallback: onCompleteCallback?) = apply {
             this.successCallback = successCallback
@@ -166,28 +161,20 @@ class DroidMailX(
             }, successCallback?.timeout ?: 0)
         }
 
-        /**
-         * method mail() from version v0.0.2 is calling send()
-         */
-
         fun mail() {
-            send() //Check for internet connection is DEPRECATED in version 0.0.3
+            send()
         }
 
-
-        /**
-         * method send() is sending email through SMTP server
-         */
-        fun send(): Boolean {
+        private fun send(): Boolean {
 
 
-            val typeHTML: String = "text/html; charset=utf-8"
-            val typePLAIN: String = "text/plain"
+            val typeHTML = "text/html; charset=utf-8"
+            val typePLAIN = "text/plain"
 
-            if (type.equals("HTML"))
-                type = typeHTML
+            type = if (type.equals("HTML"))
+                typeHTML
             else
-                type = typePLAIN
+                typePLAIN
 
             AppExecutors().diskIO().execute {
                 val props = System.getProperties()
@@ -411,13 +398,8 @@ class DroidMailX(
             return false
         }
 
-        fun strapOfUnwantedJS(body: String): String {
-
-            var strappedString = Jsoup.clean(body, Whitelist.relaxed().addTags("style"))
-            return strappedString
-
-        }
-
+        private fun strapOfUnwantedJS(body: String): String =
+            Jsoup.clean(body, Whitelist.relaxed().addTags("style"))
 
     }
 
@@ -455,7 +437,6 @@ class DroidMailX(
                 override fun onFail(errorMessage: String) {
                     this@Builder.onFail?.invoke()
                 }
-
             }
         }
     }

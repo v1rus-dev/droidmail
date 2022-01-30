@@ -1,14 +1,8 @@
 package yegor.cheprasov.droidmail
 
-import android.content.Context
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
 import yegor.cheprasov.droidmail.databinding.ActivityMainBinding
-import yegor.cheprasov.droidmailx.DroidmailXType
-import yegor.cheprasov.droidmailx.callback
-import yegor.cheprasov.droidmailx.sendEmail
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendMail() {
-//        DroidMailX.Builder()
+//        yegor.cheprasov.droidmailx.DroidMailX.Builder()
 //            .smtp(SERVER_MAIL_HOST)
 //            .port(SERVER_MAIL_PORT)
 //            .smtpUsername(FROM_ADDRESS)
@@ -34,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 //            .to("yegorcheprasov@gmail.com")
 //            .subject("Subject")
 //            .body("Body")
-//            .onCompleteCallback(object : DroidMailX.onCompleteCallback {
+//            .onCompleteCallback(object : yegor.cheprasov.droidmailx.DroidMailX.onCompleteCallback {
 //                override fun onSuccess() {
 //                    Snackbar.make(binding.root, "Email sent!", Snackbar.LENGTH_SHORT).show()
 //                }
