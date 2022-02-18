@@ -286,7 +286,7 @@ class DroidMailX(
 
                     if (replyTo != null) {
                         val addressList = replyTo!!.toList().map {
-                            InternetAddress.parse(it.trim()) as Address
+                            InternetAddress(it.trim())
                         }
                         message.replyTo = addressList.toArray()
                     }
