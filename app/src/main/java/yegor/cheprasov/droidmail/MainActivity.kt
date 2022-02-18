@@ -3,6 +3,7 @@ package yegor.cheprasov.droidmail
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import yegor.cheprasov.droidmail.databinding.ActivityMainBinding
+import yegor.cheprasov.droidmailx.sendEmail
 
 class MainActivity : AppCompatActivity() {
 

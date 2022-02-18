@@ -36,7 +36,8 @@ class DroidMailX(
     val attachments: List<String>?,
     val type: String?,
     val successCallback: onCompleteCallback?,
-    val mailSuccess: Boolean?
+    val mailSuccess: Boolean?,
+    val replyTo: String?
 ) {
 
     private constructor(builder: Builder) : this(
@@ -59,7 +60,8 @@ class DroidMailX(
         builder.attachments,
         builder.type,
         builder.successCallback,
-        builder.mailSuccess
+        builder.mailSuccess,
+        builder.replyTo
     )
 
 
@@ -104,6 +106,8 @@ class DroidMailX(
             private set
         var mailSuccess: Boolean = false
             private set
+        var replyTo: String? = null
+            private set
 
         private var errorMessage: String? = null
 
@@ -144,6 +148,8 @@ class DroidMailX(
         fun attachments(attachments: List<String>) = apply { this.attachments = attachments }
 
         fun type(type: DroidMailXType) = apply { this.type = type.toString() }
+
+        fun replyTo(to: String) = apply { this.replyTo = to }
 
         fun onCompleteCallback(successCallback: onCompleteCallback?) = apply {
             this.successCallback = successCallback
@@ -278,6 +284,13 @@ class DroidMailX(
                         }
                     }
 
+                    if (replyTo != null) {
+                        val addressList = replyTo!!.toList().map {
+                            InternetAddress.parse(it.trim()) as Address
+                        }
+                        message.replyTo = addressList.toArray()
+                    }
+
                     /**
                      * Checking if there is any bcc recipients in bcc constructor.
                      * If there is bcc recipients in bccRecipients, add them to the message
@@ -396,6 +409,16 @@ class DroidMailX(
                 }
             }
             return false
+        }
+
+        private fun<T> T.toList(): List<T> {
+            val result = arrayListOf<T>()
+            result.add(this)
+            return result
+        }
+
+        private inline fun <reified T> List<T>.toArray(): Array<T> {
+            return toTypedArray()
         }
 
         private fun strapOfUnwantedJS(body: String): String =
