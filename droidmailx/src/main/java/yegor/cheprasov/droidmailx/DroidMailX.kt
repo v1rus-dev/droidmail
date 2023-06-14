@@ -7,14 +7,21 @@ import com.sun.mail.smtp.SMTPAddressFailedException
 import com.sun.mail.smtp.SMTPAddressSucceededException
 import com.sun.mail.smtp.SMTPSendFailedException
 import com.sun.mail.smtp.SMTPSenderFailedException
-import jakarta.mail.*
-import jakarta.mail.internet.InternetAddress
-import jakarta.mail.internet.MimeBodyPart
-import jakarta.mail.internet.MimeMessage
-import jakarta.mail.internet.MimeMultipart
 import org.jsoup.Jsoup
 import org.jsoup.safety.Whitelist
 import java.io.IOException
+import javax.mail.AuthenticationFailedException
+import javax.mail.Authenticator
+import javax.mail.BodyPart
+import javax.mail.Message
+import javax.mail.MessagingException
+import javax.mail.PasswordAuthentication
+import javax.mail.Session
+import javax.mail.Transport
+import javax.mail.internet.InternetAddress
+import javax.mail.internet.MimeBodyPart
+import javax.mail.internet.MimeMessage
+import javax.mail.internet.MimeMultipart
 
 class DroidMailX(
     val to: String?,
@@ -31,6 +38,7 @@ class DroidMailX(
     val smtpUsername: String?,
     val smtpPassword: String?,
     val isStartTLSEnabled: Boolean,
+    val enableSecurity: Boolean,
     val port: String,
     val attachment: String?,
     val attachments: List<String>?,
@@ -55,6 +63,7 @@ class DroidMailX(
         builder.smtpUsername,
         builder.smtpPassword,
         builder.isStartTLSEnabled,
+        builder.enableSecurity,
         builder.port,
         builder.attachment,
         builder.attachments,
@@ -93,6 +102,8 @@ class DroidMailX(
         var smtpPassword: String? = null
             private set
         var isStartTLSEnabled: Boolean = false
+            private set
+        var enableSecurity: Boolean = true
             private set
         var port: String = ""
             private set
@@ -140,6 +151,9 @@ class DroidMailX(
 
         fun isStartTLSEnabled(isStartTLSEnabled: Boolean) =
             apply { this.isStartTLSEnabled = isStartTLSEnabled }
+
+        fun enableSecurity(isEnable: Boolean) =
+            apply { this.enableSecurity = isEnable }
 
         fun port(port: String) = apply { this.port = port }
 
@@ -222,6 +236,14 @@ class DroidMailX(
                 } else {
                     Log.i("isStartTLSEnabled", "MaildroidX: STARTTLS is disabled")
                     props.put("mail.smtp.starttls.enable", false)
+                }
+
+                if (enableSecurity) {
+                    Log.i("enableSecurity", "Security is enable")
+                    props.put("mail.smtp.ssl.enable", true)
+                } else {
+                    Log.i("enableSecurity", "Security is disabled")
+                    props.put("mail.smtp.ssl.enable", false)
                 }
 
                 val session = Session.getInstance(props,
@@ -356,7 +378,6 @@ class DroidMailX(
 
                     // Send message
                     Transport.send(message)
-
 
 
                     mailSuccess = true
